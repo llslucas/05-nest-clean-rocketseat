@@ -94,7 +94,7 @@ export class Question extends AggregateRoot<QuestionProps> {
     }
 
     if (
-      this.props.bestAnswerId &&
+      !this.props.bestAnswerId ||
       !this.props.bestAnswerId.equals(bestAnswerId)
     ) {
       this.addDomainEvent(

@@ -52,7 +52,7 @@ describe("On Question Best Answer Chosen", () => {
     );
   });
 
-  it.skip("should send a notification when topic new best answer is chosen", async () => {
+  it("should send a notification when topic new best answer is chosen", async () => {
     const question = makeQuestion();
     const answer = makeAnswer({ questionId: question.id });
 
