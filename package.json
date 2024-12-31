@@ -17,7 +17,8 @@
     "test:watch": "vitest",
     "test:cov": "vitest run --coverage",
     "test:debug": "vitest --inspect-brk --inspect --logHeapUsage --threads=false",
-    "test:e2e": "vitest run --config ./vitest.config.e2e.mts"
+    "test:e2e": "vitest run --config ./vitest.config.e2e.mts",
+    "docker:start": "docker desktop start && docker compose up -d"
   },
   "dependencies": {
     "@nestjs/common": "^10.0.0",
@@ -29,6 +30,7 @@
     "@prisma/client": "^6.1.0",
     "@types/passport-jwt": "^4.0.1",
     "bcryptjs": "^2.4.3",
+    "dayjs": "^1.11.13",
     "passport-jwt": "^4.0.1",
     "reflect-metadata": "^0.2.0",
     "rxjs": "^7.8.1",
@@ -37,6 +39,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.17.0",
+    "@faker-js/faker": "^9.3.0",
     "@nestjs/cli": "^10.0.0",
     "@nestjs/schematics": "^10.0.0",
     "@nestjs/testing": "^10.0.0",
