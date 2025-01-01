@@ -2,29 +2,83 @@ import { PaginationParams } from "@/core/repositories/pagination-params";
 import { AnswersRepository } from "@/domain/forum/application/repositories/answers-repository";
 import { Answer } from "@/domain/forum/enterprise/entities/answer";
 import { Injectable } from "@nestjs/common";
+import { PrismaService } from "../prisma.service";
+import { PrismaAnswerMapper } from "../mappers/prisma-answer-mapper";
 
 @Injectable()
-export class PrismaAnswerRepository implements AnswersRepository {
-  findById(answerId: string): Promise<Answer | null> {
-    throw new Error("Method not implemented.");
+export class PrismaAnswersRepository implements AnswersRepository {
+  constructor(private prisma: PrismaService) {}
+
+  async findById(answerId: string) {
+    const answer = await this.prisma.answer.findUnique({
+      where: {
+        id: answerId,
+      },
+    });
+
+    if (!answer) {
+      return null;
+    }
+
+    return PrismaAnswerMapper.toDomain(answer);
   }
 
-  findManyByQuestionId(
+  async findManyRecent({ page }: PaginationParams) {
+    const answers = await this.prisma.answer.findMany({
+      orderBy: {
+        createdAt: "desc",
+      },
+      take: 20,
+      skip: (page - 1) * 20,
+    });
+
+    return answers.map(PrismaAnswerMapper.toDomain);
+  }
+
+  async findManyByQuestionId(
     questionId: string,
     { page }: PaginationParams
   ): Promise<Answer[]> {
-    throw new Error("Method not implemented.");
+    const answers = await this.prisma.answer.findMany({
+      where: {
+        questionId,
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+      take: 20,
+      skip: (page - 1) * 20,
+    });
+
+    return answers.map(PrismaAnswerMapper.toDomain);
   }
 
-  create(answer: Answer): Promise<Answer> {
-    throw new Error("Method not implemented.");
+  async create(answer: Answer) {
+    const data = PrismaAnswerMapper.toPrisma(answer);
+
+    await this.prisma.answer.create({
+      data,
+    });
+
+    return answer;
   }
 
-  delete(answerId: string): Promise<void> {
-    throw new Error("Method not implemented.");
+  async save(answer: Answer) {
+    const data = PrismaAnswerMapper.toPrisma(answer);
+
+    await this.prisma.answer.update({
+      where: {
+        id: data.id,
+      },
+      data,
+    });
   }
 
-  save(answer: Answer): Promise<void> {
-    throw new Error("Method not implemented.");
+  async delete(answerId: string) {
+    await this.prisma.answer.delete({
+      where: {
+        id: answerId,
+      },
+    });
   }
 }
