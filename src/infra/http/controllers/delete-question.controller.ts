@@ -1,4 +1,10 @@
-import { Controller, Delete, HttpCode, Param } from "@nestjs/common";
+import {
+  BadRequestException,
+  Controller,
+  Delete,
+  HttpCode,
+  Param,
+} from "@nestjs/common";
 import { CurrentUser } from "@/infra/auth/current-user.decorator";
 import { UserPayload } from "@/infra/auth/jwt.strategy";
 import { DeleteQuestionUseCase } from "@/domain/forum/application/use-cases/delete-question";
@@ -13,11 +19,13 @@ export class DeleteQuestionController {
     @CurrentUser() user: UserPayload,
     @Param("questionId") questionId: string
   ) {
-    const question = await this.deleteQuestion.execute({
+    const result = await this.deleteQuestion.execute({
       questionId,
       authorId: user.sub,
     });
 
-    return { question };
+    if (result.isLeft()) {
+      throw new BadRequestException(result.value);
+    }
   }
 }
