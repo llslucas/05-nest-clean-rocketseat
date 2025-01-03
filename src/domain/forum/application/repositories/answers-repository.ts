@@ -1,14 +1,14 @@
 import { PaginationParams } from "@/core/repositories/pagination-params";
 import { Answer } from "../../enterprise/entities/answer";
 
-export interface AnswersRepository {
-  findById(answerId: string): Promise<Answer | null>;
-  findManyByQuestionId(
+export abstract class AnswersRepository {
+  abstract findById(answerId: string): Promise<Answer | null>;
+  abstract findManyByQuestionId(
     questionId: string,
     { page }: PaginationParams
   ): Promise<Answer[]>;
-  create(answer: Answer): Promise<Answer>;
-  delete(answerId: string): Promise<void>;
-  save(answer: Answer): Promise<void>;
+  abstract create(answer: Answer): Promise<Answer>;
+  abstract delete(answerId: string): Promise<void>;
+  abstract save(answer: Answer): Promise<void>;
 }
 
