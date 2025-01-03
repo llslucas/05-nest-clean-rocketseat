@@ -7,6 +7,7 @@ import { QuestionAttachment } from "../../enterprise/entities/question-attachmen
 import { UniqueEntityId } from "@/core/entities/unique-entity-id";
 import { QuestionAttachmentList } from "../../enterprise/entities/question-attachment-list";
 import { QuestionAttachmentsRepository } from "../repositories/question-attachments-repository";
+import { Injectable } from "@nestjs/common";
 
 interface EditQuestionUseCaseRequest {
   questionId: string;
@@ -23,6 +24,7 @@ type EditQuestionUseCaseResponse = Either<
   }
 >;
 
+@Injectable()
 export class EditQuestionUseCase {
   constructor(
     private questionsRepository: QuestionsRepository,
