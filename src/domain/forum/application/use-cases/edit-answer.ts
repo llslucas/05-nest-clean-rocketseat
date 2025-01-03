@@ -7,6 +7,7 @@ import { ResourceNotFoundError } from "@/core/errors/resource-not-found-error";
 import { AnswerAttachment } from "../../enterprise/entities/answer-attachment";
 import { UniqueEntityId } from "@/core/entities/unique-entity-id";
 import { AnswerAttachmentList } from "../../enterprise/entities/answer-attachment-list";
+import { Injectable } from "@nestjs/common";
 
 interface EditAnswerUseCaseRequest {
   answerId: string;
@@ -22,6 +23,7 @@ type EditAnswerUseCaseResponse = Either<
   }
 >;
 
+@Injectable()
 export class EditAnswerUseCase {
   constructor(
     private answersRepository: AnswersRepository,
