@@ -43,8 +43,6 @@ export class EditQuestionController {
       questionId,
     });
 
-    console.log(result);
-
     if (result.isLeft()) {
       throw new BadRequestException(result.value);
     }
