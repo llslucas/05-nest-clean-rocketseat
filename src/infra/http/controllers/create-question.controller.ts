@@ -8,6 +8,7 @@ import { CreateQuestionUseCase } from "@/domain/forum/application/use-cases/crea
 const createQuestionBodySchema = z.object({
   title: z.string(),
   content: z.string(),
+  attachments: z.array(z.string().uuid()),
 });
 
 const validationPipe = new ZodValidationPipe(createQuestionBodySchema);
@@ -23,16 +24,16 @@ export class CreateQuestionController {
     @Body(validationPipe) body: CreateQuestionBodySchema,
     @CurrentUser() user: UserPayload
   ) {
-    const { title, content } = body;
+    const { title, content, attachments } = body;
     const userId = user.sub;
 
-    const question = await this.createQuestion.execute({
+    const result = await this.createQuestion.execute({
       title,
       content,
       authorId: userId,
-      attachmentIds: [],
+      attachmentIds: attachments,
     });
 
-    return { question };
+    return result.value;
   }
 }

@@ -72,6 +72,20 @@ export class EditQuestionUseCase {
 
     await this.questionsRepository.save(question);
 
+    // console.log(
+    //   question.attachments
+    //     .getItems()
+    //     .map((item) => item.attachmentId.toString()),
+
+    //   question.attachments
+    //     .getNewItems()
+    //     .map((item) => item.attachmentId.toString()),
+
+    //   question.attachments
+    //     .getRemovedItems()
+    //     .map((item) => item.attachmentId.toString())
+    // );
+
     return right({ question });
   }
 }

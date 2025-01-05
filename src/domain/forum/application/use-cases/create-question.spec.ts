@@ -42,5 +42,27 @@ describe("Create question use case", () => {
       ]);
     }
   });
+
+  it("should register the new attachments", async () => {
+    const result = await sut.execute({
+      authorId: "1",
+      title: "Testing Question",
+      content: "Question content",
+      attachmentIds: ["1", "2"],
+    });
+
+    const success = result.isRight();
+
+    expect(success).toBe(true);
+
+    if (success) {
+      const attachmentsOnDatabase = inMemoryQuestionAttachmentsRepository.items;
+      expect(attachmentsOnDatabase).toHaveLength(2);
+      expect(attachmentsOnDatabase).toEqual([
+        expect.objectContaining({ attachmentId: new UniqueEntityId("1") }),
+        expect.objectContaining({ attachmentId: new UniqueEntityId("2") }),
+      ]);
+    }
+  });
 });
 

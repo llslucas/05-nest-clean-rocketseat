@@ -4,10 +4,14 @@ import { Question } from "@/domain/forum/enterprise/entities/question";
 import { Injectable } from "@nestjs/common";
 import { PrismaService } from "../prisma.service";
 import { PrismaQuestionMapper } from "../mappers/prisma-question-mapper";
+import { QuestionAttachmentsRepository } from "@/domain/forum/application/repositories/question-attachments-repository";
 
 @Injectable()
 export class PrismaQuestionsRepository implements QuestionsRepository {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private questionAttachmentsRepository: QuestionAttachmentsRepository
+  ) {}
 
   async findById(questionId: string) {
     const question = await this.prisma.question.findUnique({
@@ -56,18 +60,30 @@ export class PrismaQuestionsRepository implements QuestionsRepository {
       data,
     });
 
+    await this.questionAttachmentsRepository.createMany(
+      question.attachments.getItems()
+    );
+
     return question;
   }
 
   async save(question: Question) {
     const data = PrismaQuestionMapper.toPrisma(question);
 
-    await this.prisma.question.update({
-      where: {
-        id: data.id,
-      },
-      data,
-    });
+    await Promise.all([
+      this.prisma.question.update({
+        where: {
+          id: question.id.toString(),
+        },
+        data,
+      }),
+      this.questionAttachmentsRepository.createMany(
+        question.attachments.getNewItems()
+      ),
+      this.questionAttachmentsRepository.deleteMany(
+        question.attachments.getRemovedItems()
+      ),
+    ]);
   }
 
   async delete(questionId: string) {

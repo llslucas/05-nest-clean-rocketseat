@@ -1,4 +1,5 @@
 import { Entity } from "@/core/entities/entity";
+import { UniqueEntityId } from "@/core/entities/unique-entity-id";
 
 export interface AttachmentProps {
   title: string;
@@ -6,8 +7,8 @@ export interface AttachmentProps {
 }
 
 export class Attachment extends Entity<AttachmentProps> {
-  static create(props: AttachmentProps): Attachment {
-    return new Attachment(props);
+  static create(props: AttachmentProps, id?: UniqueEntityId): Attachment {
+    return new Attachment(props, id);
   }
 
   get title() {
