@@ -14,6 +14,16 @@ export class InMemoryAnswerAttachmentsRepository
     return filteredItens;
   }
 
+  async createMany(attachments: AnswerAttachment[]) {
+    this.items.push(...attachments);
+  }
+
+  async deleteMany(attachments: AnswerAttachment[]) {
+    this.items = this.items.filter((item) => {
+      return !attachments.some((attachment) => attachment.equals(item));
+    });
+  }
+
   async deleteManyByAnswerId(answerId: string) {
     this.items = this.items.filter((item) => {
       return item.answerId.toString() !== answerId;
