@@ -54,13 +54,21 @@ describe("Fetch question comments (E2E)", () => {
       .set("Authorization", `Bearer ${accessToken}`)
       .send();
 
+    // console.log(response.body);
+
     expect(response.statusCode).toBe(200);
 
     expect(response.body).toEqual(
       expect.objectContaining({
         comments: expect.arrayContaining([
-          expect.objectContaining({ id: comments[0].id.toString() }),
-          expect.objectContaining({ id: comments[1].id.toString() }),
+          expect.objectContaining({
+            commentId: comments[0].id.toString(),
+            authorName: user.name,
+          }),
+          expect.objectContaining({
+            commentId: comments[1].id.toString(),
+            authorName: user.name,
+          }),
         ]),
       })
     );
