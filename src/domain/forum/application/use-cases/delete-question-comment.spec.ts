@@ -3,14 +3,20 @@ import { makeQuestionComment } from "test/factories/make-question-comment";
 import { InMemoryQuestionCommentsRepository } from "test/repositories/in-memory-question-comments-repository";
 import { DeleteQuestionCommentUseCase } from "./delete-question-comment";
 import { NotAllowedError } from "@/core/errors/not-allowed-error";
+import { InMemoryStudentsRepository } from "test/repositories/in-memory-students-repository";
 
+let inMemoryStudentsRepository: InMemoryStudentsRepository;
 let inMemoryQuestionCommentsRepository: InMemoryQuestionCommentsRepository;
 let sut: DeleteQuestionCommentUseCase;
 
 describe("Delete question comment use case", () => {
   beforeEach(async () => {
-    inMemoryQuestionCommentsRepository =
-      new InMemoryQuestionCommentsRepository();
+    inMemoryStudentsRepository = new InMemoryStudentsRepository();
+
+    inMemoryQuestionCommentsRepository = new InMemoryQuestionCommentsRepository(
+      inMemoryStudentsRepository
+    );
+
     sut = new DeleteQuestionCommentUseCase(inMemoryQuestionCommentsRepository);
   });
 
@@ -19,9 +25,8 @@ describe("Delete question comment use case", () => {
       authorId: new UniqueEntityId("test-author"),
     });
 
-    const questionComment = await inMemoryQuestionCommentsRepository.create(
-      newQuestionComment
-    );
+    const questionComment =
+      await inMemoryQuestionCommentsRepository.create(newQuestionComment);
 
     const result = await sut.execute({
       questionCommentId: questionComment.id.toString(),
@@ -37,9 +42,8 @@ describe("Delete question comment use case", () => {
       authorId: new UniqueEntityId("test-author-1"),
     });
 
-    const questionComment = await inMemoryQuestionCommentsRepository.create(
-      newQuestionComment
-    );
+    const questionComment =
+      await inMemoryQuestionCommentsRepository.create(newQuestionComment);
 
     const result = await sut.execute({
       questionCommentId: questionComment.id.toString(),

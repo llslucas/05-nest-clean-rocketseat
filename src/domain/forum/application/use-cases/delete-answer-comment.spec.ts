@@ -3,13 +3,18 @@ import { makeAnswerComment } from "test/factories/make-answer-comment";
 import { InMemoryAnswerCommentsRepository } from "test/repositories/in-memory-answer-comments-repository";
 import { DeleteAnswerCommentUseCase } from "./delete-answer-comment";
 import { NotAllowedError } from "@/core/errors/not-allowed-error";
+import { InMemoryStudentsRepository } from "test/repositories/in-memory-students-repository";
 
+let inMemoryStudentsRepository: InMemoryStudentsRepository;
 let inMemoryAnswerCommentsRepository: InMemoryAnswerCommentsRepository;
 let sut: DeleteAnswerCommentUseCase;
 
 describe("Delete answer comment use case", () => {
   beforeEach(async () => {
-    inMemoryAnswerCommentsRepository = new InMemoryAnswerCommentsRepository();
+    inMemoryStudentsRepository = new InMemoryStudentsRepository();
+    inMemoryAnswerCommentsRepository = new InMemoryAnswerCommentsRepository(
+      inMemoryStudentsRepository
+    );
     sut = new DeleteAnswerCommentUseCase(inMemoryAnswerCommentsRepository);
   });
 
@@ -18,9 +23,8 @@ describe("Delete answer comment use case", () => {
       authorId: new UniqueEntityId("test-author"),
     });
 
-    const answerComment = await inMemoryAnswerCommentsRepository.create(
-      newAnswerComment
-    );
+    const answerComment =
+      await inMemoryAnswerCommentsRepository.create(newAnswerComment);
 
     const result = await sut.execute({
       answerCommentId: answerComment.id.toString(),
@@ -34,9 +38,8 @@ describe("Delete answer comment use case", () => {
   it("should not be able to delete a answer comment from another user", async () => {
     const newAnswerComment = makeAnswerComment();
 
-    const answerComment = await inMemoryAnswerCommentsRepository.create(
-      newAnswerComment
-    );
+    const answerComment =
+      await inMemoryAnswerCommentsRepository.create(newAnswerComment);
 
     const result = await sut.execute({
       answerCommentId: answerComment.id.toString(),
