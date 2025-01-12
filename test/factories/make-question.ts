@@ -29,8 +29,8 @@ export function makeQuestion(
 export class QuestionFactory {
   constructor(private prismaService: PrismaService) {}
 
-  async makePrismaQuestion(data?: Partial<QuestionProps>) {
-    const question = makeQuestion(data);
+  async makePrismaQuestion(data?: Partial<QuestionProps>, id?: UniqueEntityId) {
+    const question = makeQuestion(data, id);
 
     await this.prismaService.question.create({
       data: PrismaQuestionMapper.toPrisma(question),

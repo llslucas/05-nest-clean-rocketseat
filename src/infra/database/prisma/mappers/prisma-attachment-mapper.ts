@@ -1,5 +1,6 @@
+import { UniqueEntityId } from "@/core/entities/unique-entity-id";
 import { Attachment } from "@/domain/forum/enterprise/entities/attachment";
-import { Prisma } from "@prisma/client";
+import { Prisma, Attachment as PrismaAttachment } from "@prisma/client";
 
 export class PrismaAttachmentMapper {
   static toPrisma(
@@ -10,5 +11,15 @@ export class PrismaAttachmentMapper {
       title: attachment.title,
       url: attachment.url,
     };
+  }
+
+  static toDomain(attachment: PrismaAttachment): Attachment {
+    return Attachment.create(
+      {
+        title: attachment.title,
+        url: attachment.url,
+      },
+      new UniqueEntityId(attachment.id)
+    );
   }
 }
