@@ -59,13 +59,13 @@ describe("Get question by slug use case", () => {
     const success = result.isRight();
 
     if (success) {
-      expect(result.value.question).toEqual(
-        expect.objectContaining({
+      expect(result.value).toMatchObject({
+        question: expect.objectContaining({
           questionId: newQuestion.id,
           authorId: student.id,
           attachments: expect.arrayContaining([attachment]),
-        })
-      );
+        }),
+      });
     }
   });
 });
