@@ -40,9 +40,10 @@ import { DeleteAnswerCommentUseCase } from "@/domain/forum/application/use-cases
 import { UploadFileController } from "./controllers/upload-file.controller";
 import { UploadAndCreateAttachmentUseCase } from "@/domain/forum/application/use-cases/upload-and-create-attachment";
 import { StorageModule } from "../storage/storage.module";
+import { EventsModule } from "../events/events.module";
 
 @Module({
-  imports: [DatabaseModule, CryptografyModule, StorageModule],
+  imports: [DatabaseModule, CryptografyModule, StorageModule, EventsModule],
   controllers: [
     CreateAccountController,
     AuthenticateController,
