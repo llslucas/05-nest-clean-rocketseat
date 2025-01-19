@@ -44,7 +44,15 @@ describe("Prisma questions repository (E2E)", () => {
       `questions:${question.slug.value}:details`
     );
 
-    expect(cachedQuestionDetails).toEqual(JSON.stringify(questionOnDatabase));
+    if (!cachedQuestionDetails || !questionOnDatabase) {
+      throw new Error();
+    }
+
+    expect(JSON.parse(cachedQuestionDetails)).toEqual(
+      expect.objectContaining({
+        id: questionOnDatabase.questionId.toString(),
+      })
+    );
   });
 
   it("show retrieve cached question details after the first search.", async () => {
@@ -55,16 +63,27 @@ describe("Prisma questions repository (E2E)", () => {
 
     await questionsRepository.findDetailsBySlug(question.slug.value);
 
+    const cachedData = await cacheRepository.get(
+      `questions:${question.slug.value}:details`
+    );
+
+    if (!cachedData) {
+      throw new Error();
+    }
+
+    const cachedQuestion = JSON.parse(cachedData);
+    cachedQuestion.title = "Cached Question";
+
     cacheRepository.set(
       `questions:${question.slug.value}:details`,
-      JSON.stringify({ empty: true })
+      JSON.stringify(cachedQuestion)
     );
 
     const questionOnDatabase = await questionsRepository.findDetailsBySlug(
       question.slug.value
     );
 
-    expect(questionOnDatabase).toEqual({ empty: true });
+    expect(questionOnDatabase?.title).toEqual("Cached Question");
   });
 
   it("show delete cached question details after question update.", async () => {
