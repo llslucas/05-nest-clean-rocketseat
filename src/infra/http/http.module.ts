@@ -41,6 +41,8 @@ import { UploadFileController } from "./controllers/upload-file.controller";
 import { UploadAndCreateAttachmentUseCase } from "@/domain/forum/application/use-cases/upload-and-create-attachment";
 import { StorageModule } from "../storage/storage.module";
 import { EventsModule } from "../events/events.module";
+import { ReadNotificationController } from "./controllers/read-notification.controller";
+import { ReadNotificationUseCase } from "@/domain/notifications/application/use-cases/read-notification";
 
 @Module({
   imports: [DatabaseModule, CryptografyModule, StorageModule, EventsModule],
@@ -64,6 +66,7 @@ import { EventsModule } from "../events/events.module";
     DeleteQuestionCommentController,
     DeleteAnswerCommentController,
     UploadFileController,
+    ReadNotificationController,
   ],
   providers: [
     CreateQuestionUseCase,
@@ -85,6 +88,7 @@ import { EventsModule } from "../events/events.module";
     DeleteQuestionCommentUseCase,
     DeleteAnswerCommentUseCase,
     UploadAndCreateAttachmentUseCase,
+    ReadNotificationUseCase,
   ],
 })
 export class HttpModule {}
